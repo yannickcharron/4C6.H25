@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ca.qc.cstj.firstapplication.ui.screens.GameScreen
 import ca.qc.cstj.firstapplication.ui.theme.FirstApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,34 +28,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FirstApplicationTheme {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Text(text = 0.toString(), fontSize = 32.sp)
-                        Column {
-                            Button(onClick = {}) {
-                                Text(text = "+", fontSize = 20.sp)
-                            }
-                            Button(onClick = {}) {
-                                Text(text = "-", fontSize = 20.sp)
-                            }
-                        }
-                    }
-                    Button(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        onClick = { }
-                    ) {
-                        Text(text = "Try", fontSize = 32.sp)
-                    }
-                }
+                GameScreen()
             }
         }
     }
