@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Première application</string>
+    <string name="new_game">Nouvelle partie</string>
+    <string name="msg_try">Essayer</string>
+    <string name="good_luck">Bonne chance!!!</string>
+    <string name="too_high">Trop grand</string>
+    <string name="too_low">Trop petit</string>
+    <string name="you_won">Vous avez gagné</string>
+</resources>
