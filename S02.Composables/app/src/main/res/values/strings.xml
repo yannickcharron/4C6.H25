@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Composables</string>
+    <string name="good_morning">Good Morning, %s</string>
+    <string name="we_wish_you_a_good_day">We wish you a good day!</string>
 </resources>
