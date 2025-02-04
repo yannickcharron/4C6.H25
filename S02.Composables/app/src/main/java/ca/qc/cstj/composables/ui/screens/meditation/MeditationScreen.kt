@@ -5,10 +5,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,11 +29,13 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ca.qc.cstj.composables.R
+import ca.qc.cstj.composables.core.extensions.colorPaths
 import ca.qc.cstj.composables.data.MockData
 import ca.qc.cstj.composables.models.Meditation
 import ca.qc.cstj.composables.ui.theme.ButtonBlue
@@ -46,8 +52,26 @@ fun MeditationScreen(
         SearchSection()
         TagsSection(MockData.meditationTags)
         CurrentMeditation(MockData.meditations.random())
-        //MeditationGrid
+        MeditationGrid(MockData.meditations)
     }
+}
+
+@Composable
+fun MeditationGrid(meditations: List<Meditation>) {
+
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxHeight(),
+        columns = GridCells.Fixed(2)
+    ) {
+        items(meditations) {
+            MeditationCard(it)
+        }
+    }
+}
+
+@Composable
+fun MeditationCard(meditation: Meditation) {
+    Text(text = meditation.title)
 }
 
 @Composable
@@ -59,6 +83,11 @@ fun CurrentMeditation(meditation: Meditation) {
             modifier = Modifier
                 .padding(horizontal = 8.dp, vertical = 16.dp)
                 .fillMaxWidth()
+                .drawBehind {
+                    val (mediumColoredPath, lightColoredPath) = colorPaths(size.width, size.height)
+                    drawPath(path = mediumColoredPath, color = meditation.colors.second)
+                    drawPath(path = lightColoredPath, color = meditation.colors.third)
+                }
         ) {
             Text(text = meditation.title, style = MaterialTheme.typography.headlineMedium)
             Text(text = stringResource(R.string.minutes, meditation.duration), style = MaterialTheme.typography.bodySmall)

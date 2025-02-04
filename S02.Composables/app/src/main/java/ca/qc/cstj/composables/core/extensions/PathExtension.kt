@@ -1,4 +1,4 @@
-package ca.qc.cstj.compose.core.extensions
+package ca.qc.cstj.composables.core.extensions
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
