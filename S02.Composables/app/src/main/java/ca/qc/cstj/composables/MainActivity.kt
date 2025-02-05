@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import ca.qc.cstj.composables.ui.components.BottomBar
 import ca.qc.cstj.composables.ui.components.TopBar
 import ca.qc.cstj.composables.ui.screens.meditation.MeditationScreen
 import ca.qc.cstj.composables.ui.theme.ComposablesTheme
@@ -24,12 +25,14 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = { TopBar("Yannick") },
-                    bottomBar = { }
+                    bottomBar = { BottomBar() }
                 ) { innerPadding ->
                     MeditationScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
+
+
 }
 
