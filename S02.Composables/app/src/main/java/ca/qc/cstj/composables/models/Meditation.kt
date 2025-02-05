@@ -1,6 +1,12 @@
 package ca.qc.cstj.composables.models
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Headphones
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.NightsStay
+import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import ca.qc.cstj.composables.data.MockData
 import ca.qc.cstj.composables.ui.theme.Blue1
 import ca.qc.cstj.composables.ui.theme.Blue2
@@ -30,5 +36,14 @@ data class Meditation(
             "green" -> Triple(Green3, Green2, Green1)
             "orange" -> Triple(Orange3, Orange2, Orange1)
             else -> Triple(Blue3, Blue2, Blue1)
+        }
+
+    val icon : ImageVector
+        get() = when(_icon) {
+            "music" -> Icons.Default.MusicNote
+            "night" -> Icons.Default.NightsStay
+            "headphone" -> Icons.Default.Headphones
+            "meditation" -> Icons.Default.SelfImprovement
+            else -> Icons.Default.Headphones
         }
 }

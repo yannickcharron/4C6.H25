@@ -4,4 +4,6 @@
     <string name="we_wish_you_a_good_day">We wish you a good day!</string>
     <string name="search">Search</string>
     <string name="minutes">%1$s minutes</string>
+    <string name="start">Start</string>
+    <string name="features">Features</string>
 </resources>
