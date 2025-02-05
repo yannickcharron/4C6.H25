@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.composables.R
 import ca.qc.cstj.composables.core.extensions.colorPaths
 import ca.qc.cstj.composables.data.MockData
@@ -50,14 +52,18 @@ import ca.qc.cstj.composables.ui.theme.TextWhite
 
 @Composable
 fun MeditationScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MeditationScreenViewModel = viewModel()
 ) {
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
     Column(
         modifier = modifier.padding(12.dp)
     ) {
-        SearchSection()
+        SearchSection(uiState.searchValue, onSearch = { newValue -> viewModel.updateSearchValue(newValue) })
         TagsSection(MockData.meditationTags)
-        CurrentMeditation(MockData.meditations.random())
+        CurrentMeditation(uiState.currentMeditation)
         MeditationGrid(MockData.meditations)
     }
 }
@@ -145,14 +151,17 @@ fun CurrentMeditation(meditation: Meditation) {
 }
 
 @Composable
-fun SearchSection() {
+fun SearchSection(
+    searchValue : String,
+    onSearch: (String) -> Unit
+) {
     TextField(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(8.dp))
         .heightIn(min = 56.dp)
         .border(width = 1.dp, color = TextWhite, shape = RoundedCornerShape(8.dp)),
-        value = "",
-        onValueChange = {},
+        value = searchValue,
+        onValueChange = { newValue -> onSearch(newValue) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search)
