@@ -52,8 +52,7 @@ import ca.qc.cstj.composables.ui.theme.TextWhite
 
 @Composable
 fun MeditationScreen(
-    modifier: Modifier = Modifier,
-    viewModel: MeditationScreenViewModel = viewModel()
+    modifier: Modifier = Modifier, viewModel: MeditationScreenViewModel = viewModel()
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -61,15 +60,28 @@ fun MeditationScreen(
     Column(
         modifier = modifier.padding(12.dp)
     ) {
-        SearchSection(uiState.searchValue, onSearch = { newValue -> viewModel.updateSearchValue(newValue) })
-        TagsSection(MockData.meditationTags)
+        SearchSection(
+            searchValue = uiState.searchValue,
+            onSearch = { viewModel.updateSearchValue(it) }
+        )
+        TagsSection(
+            tags = uiState.tags,
+            selectedTag = uiState.selectedTag,
+            onTagClick = { viewModel.changeSelectedTag(it) }
+        )
         CurrentMeditation(uiState.currentMeditation)
-        MeditationGrid(MockData.meditations)
+        MeditationGrid(
+            meditations = uiState.meditations,
+            onStartMeditation = { viewModel.startMeditation(it) }
+        )
     }
 }
 
 @Composable
-fun MeditationGrid(meditations: List<Meditation>) {
+fun MeditationGrid(
+    meditations: List<Meditation>,
+    onStartMeditation: (Meditation) -> Unit
+) {
 
     Text(
         text = stringResource(R.string.features),
@@ -84,26 +96,28 @@ fun MeditationGrid(meditations: List<Meditation>) {
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(meditations) {
-            MeditationCard(it)
+            MeditationCard(meditation = it, onStartMeditation = onStartMeditation)
         }
     }
 }
 
 @Composable
-fun MeditationCard(meditation: Meditation) {
+fun MeditationCard(
+    meditation: Meditation, onStartMeditation: (Meditation) -> Unit
+) {
     Card(
         modifier = Modifier.aspectRatio(1.5f),
         colors = CardDefaults.cardColors(containerColor = meditation.colors.first)
     ) {
-        Column(modifier = Modifier
-            .aspectRatio(1.5f)
-            .padding(6.dp)
-            .drawBehind {
-                val (mediumColoredPath, lightColoredPath) = colorPaths(size.width, size.height)
-                drawPath(path = mediumColoredPath, color = meditation.colors.second)
-                drawPath(path = lightColoredPath, color = meditation.colors.third)
-            },
-            verticalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier
+                .aspectRatio(1.5f)
+                .padding(6.dp)
+                .drawBehind {
+                    val (mediumColoredPath, lightColoredPath) = colorPaths(size.width, size.height)
+                    drawPath(path = mediumColoredPath, color = meditation.colors.second)
+                    drawPath(path = lightColoredPath, color = meditation.colors.third)
+                }, verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = meditation.title, style = MaterialTheme.typography.headlineMedium, lineHeight = 22.sp
@@ -118,7 +132,7 @@ fun MeditationCard(meditation: Meditation) {
                 )
                 Button(colors = ButtonDefaults.buttonColors(
                     containerColor = ButtonBlue, contentColor = TextWhite
-                ), onClick = {}) {
+                ), onClick = { onStartMeditation(meditation) }) {
                     Text(
                         text = stringResource(R.string.start), fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
@@ -152,8 +166,7 @@ fun CurrentMeditation(meditation: Meditation) {
 
 @Composable
 fun SearchSection(
-    searchValue : String,
-    onSearch: (String) -> Unit
+    searchValue: String, onSearch: (String) -> Unit
 ) {
     TextField(modifier = Modifier
         .fillMaxWidth()
@@ -178,12 +191,19 @@ fun SearchSection(
 }
 
 @Composable
-fun TagsSection(tags: List<String>) {
+fun TagsSection(
+    tags: List<String>,
+    selectedTag: String,
+    onTagClick: (String) -> Unit
+) {
     LazyRow(
         modifier = Modifier.padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(tags) {
-            FilterChip(selected = false, onClick = {}, label = {
+        items(tags) { it ->
+            FilterChip(
+                selected = it == selectedTag,
+                onClick = { onTagClick(it) } ,
+            label = {
                 Text(text = it, style = MaterialTheme.typography.bodySmall)
             }, colors = FilterChipDefaults.filterChipColors(
                 containerColor = DarkerButtonBlue, selectedContainerColor = ButtonBlue
