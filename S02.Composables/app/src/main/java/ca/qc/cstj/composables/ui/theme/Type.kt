@@ -29,6 +29,11 @@ val Typography = Typography(
         color = TextWhite,
         fontFamily = PoppinsFont,
         fontSize = 22.sp
+    ),
+    displayLarge = TextStyle(
+        color = TextWhite,
+        fontFamily = PoppinsFont,
+        fontSize = 32.sp
     )
     /* Other default text styles to override
     titleLarge = TextStyle(
