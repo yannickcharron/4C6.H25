@@ -10,10 +10,10 @@ import ca.qc.cstj.composables.ui.components.TopBar
 import ca.qc.cstj.composables.ui.screens.meditation.MeditationScreen
 
 @Composable
-fun MainScreen() {
+fun MainScreen(name : String) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopBar("Yannick") },
+        topBar = { TopBar(name) },
         bottomBar = { BottomBar() }
     ) { innerPadding ->
         MeditationScreen(modifier = Modifier.padding(innerPadding))

@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import ca.qc.cstj.composables.ui.components.BottomBar
 import ca.qc.cstj.composables.ui.components.TopBar
 import ca.qc.cstj.composables.ui.navigation.Destination
@@ -36,11 +37,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable<Destination.Title> {
                         TitleScreen(navigateToMain = {
-                            navController.navigate(Destination.Main)
+                            navController.navigate(Destination.Main(it))
                         })
                     }
                     composable<Destination.Main> {
-                        MainScreen()
+                        val args = it.toRoute<Destination.Main>()
+                        MainScreen(name = args.name)
                     }
                 }
             }

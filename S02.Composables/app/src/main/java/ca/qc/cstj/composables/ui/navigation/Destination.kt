@@ -8,5 +8,5 @@ sealed class Destination {
     @Serializable
     data object Title : Destination()
     @Serializable
-    data object Main : Destination()
+    data class Main(val name: String) : Destination()
 }
