@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -23,6 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,6 +35,7 @@ import ca.qc.cstj.composables.ui.theme.TextWhite
 
 @Composable
 fun TitleScreen(
+    navigateToMain : () -> Unit,
     viewModel: TitleScreenViewModel = viewModel()
 ) {
 
@@ -42,7 +46,7 @@ fun TitleScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {
         Image(
             painter = painterResource(R.drawable.kiwiflow),
@@ -64,12 +68,18 @@ fun TitleScreen(
                 Text(text = stringResource(R.string.password))
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if(uiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(
-                    onClick = {}
+                    onClick = {
+                        viewModel.togglePasswordVisibility()
+                    }
                 ) {
-                    Icon(imageVector = Icons.Filled.Visibility, contentDescription = null)
+                    if(uiState.isPasswordVisible) {
+                        Icon(imageVector = Icons.Filled.VisibilityOff, contentDescription = null)
+                    } else {
+                        Icon(imageVector = Icons.Filled.Visibility, contentDescription = null)
+                    }
                 }
             }
         )
@@ -78,7 +88,9 @@ fun TitleScreen(
                 containerColor = ButtonBlue,
                 contentColor = TextWhite
             ),
-            onClick = {},
+            onClick = {
+                navigateToMain()
+            },
         ) {
         Text(
             text = stringResource(R.string.login),

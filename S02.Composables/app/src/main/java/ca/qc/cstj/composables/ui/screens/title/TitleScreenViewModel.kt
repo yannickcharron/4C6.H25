@@ -25,4 +25,12 @@ class TitleScreenViewModel : ViewModel() {
             )
         }
     }
+
+    fun togglePasswordVisibility() {
+        _uiState.update {
+            _uiState.value.copy(
+                isPasswordVisible = !uiState.value.isPasswordVisible
+            )
+        }
+    }
 }

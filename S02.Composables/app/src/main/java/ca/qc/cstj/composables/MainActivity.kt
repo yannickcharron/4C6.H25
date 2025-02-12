@@ -11,8 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import ca.qc.cstj.composables.ui.components.BottomBar
 import ca.qc.cstj.composables.ui.components.TopBar
+import ca.qc.cstj.composables.ui.navigation.Destination
+import ca.qc.cstj.composables.ui.screens.main.MainScreen
 import ca.qc.cstj.composables.ui.screens.meditation.MeditationScreen
 import ca.qc.cstj.composables.ui.screens.title.TitleScreen
 import ca.qc.cstj.composables.ui.theme.ComposablesTheme
@@ -23,14 +28,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposablesTheme(dynamicColor = false) {
-//                Scaffold(
-//                    modifier = Modifier.fillMaxSize(),
-//                    topBar = { TopBar("Yannick") },
-//                    bottomBar = { BottomBar() }
-//                ) { innerPadding ->
-//                    MeditationScreen(modifier = Modifier.padding(innerPadding))
-//                }
-            TitleScreen()
+                val navController = rememberNavController()
+                NavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = navController,
+                    startDestination = Destination.Title
+                ) {
+                    composable<Destination.Title> {
+                        TitleScreen(navigateToMain = {
+                            navController.navigate(Destination.Main)
+                        })
+                    }
+                    composable<Destination.Main> {
+                        MainScreen()
+                    }
+                }
             }
         }
     }
