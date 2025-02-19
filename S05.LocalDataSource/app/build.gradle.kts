@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -60,6 +61,11 @@ dependencies {
     //Permets la navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json) //La navigation a besoin de la serialization JSON
+
+    //ROOM (Base de données SQL locale)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
