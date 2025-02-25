@@ -6,12 +6,14 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import ca.qc.cstj.inkify.models.Note
+import kotlinx.coroutines.flow.Flow
 
 //Data Access object
 @Dao
 interface NoteRepository {
 
-    //@Query("SELECT * from notes")
+    @Query("SELECT * from notes")
+    fun retrieveAll() : Flow<List<Note>>
 
     @Insert
     suspend fun create(note: Note)

@@ -14,5 +14,5 @@ data class Note(
     val title: String = "",
     val content: String = "",
     val color: String = Constants.NOTES_COLORS.random(),
-    //val creationDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    val creationDate: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 )
