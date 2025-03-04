@@ -12,20 +12,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ca.qc.cstj.inkify.R
 import ca.qc.cstj.inkify.ui.components.NoteCard
+import ca.qc.cstj.inkify.ui.components.TopBar
 
 @Composable
 fun NotesListScreen(
     viewModel: NotesListScreenViewModel = viewModel(),
-    toAddNoteScreen: () -> Unit
+    toAddNoteScreen: () -> Unit,
+    toSettingsScreen: () -> Unit,
+    navigateUp: () -> Unit
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                title = stringResource(R.string.app_name),
+                navigateUp = { navigateUp() },
+                toSettingScreen = { toSettingsScreen() })
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {

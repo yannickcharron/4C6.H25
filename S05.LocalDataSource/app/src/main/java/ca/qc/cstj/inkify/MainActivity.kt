@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import ca.qc.cstj.inkify.ui.navigation.Destination
 import ca.qc.cstj.inkify.ui.screens.add.AddNoteScreen
 import ca.qc.cstj.inkify.ui.screens.list.NotesListScreen
+import ca.qc.cstj.inkify.ui.screens.settings.SettingsScreen
 import ca.qc.cstj.inkify.ui.theme.InkifyTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,14 +34,18 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable<Destination.NotesList> {
                         NotesListScreen(
-                            toAddNoteScreen = { navController.navigate(Destination.AddNote) }
+                            toAddNoteScreen = { navController.navigate(Destination.AddNote) },
+                            toSettingsScreen = { navController.navigate(Destination.Settings)},
+                            navigateUp = { navController.navigateUp() },
                         )
                     }
                     composable<Destination.AddNote> {
                         AddNoteScreen()
                     }
                     composable<Destination.Settings> {
-
+                        SettingsScreen(
+                            navigateUp = { navController.navigateUp() }
+                        )
                     }
                 }
             }
