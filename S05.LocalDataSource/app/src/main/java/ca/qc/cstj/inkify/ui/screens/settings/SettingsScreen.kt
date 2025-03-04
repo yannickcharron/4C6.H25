@@ -107,7 +107,7 @@ fun SettingsScreen(
                 }
             }
 
-            ElevatedButton(onClick = { }) {
+            ElevatedButton(onClick = { viewModel.reset() }) {
                 Text(text = stringResource(R.string.reset))
             }
         }
