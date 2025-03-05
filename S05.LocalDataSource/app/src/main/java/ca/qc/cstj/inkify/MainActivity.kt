@@ -36,11 +36,13 @@ class MainActivity : ComponentActivity() {
                         NotesListScreen(
                             toAddNoteScreen = { navController.navigate(Destination.AddNote) },
                             toSettingsScreen = { navController.navigate(Destination.Settings)},
-                            navigateUp = { navController.navigateUp() },
+                            navigateUp = { finish() },
                         )
                     }
                     composable<Destination.AddNote> {
-                        AddNoteScreen()
+                        AddNoteScreen(
+                            navigateUp = { navController.navigateUp() }
+                        )
                     }
                     composable<Destination.Settings> {
                         SettingsScreen(

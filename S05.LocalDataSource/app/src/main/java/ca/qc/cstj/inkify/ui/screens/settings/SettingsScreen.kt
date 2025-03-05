@@ -51,7 +51,10 @@ fun SettingsScreen(
     val uiState = viewModel.uiState.collectAsState().value
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopBar(stringResource(R.string.app_name), navigateUp = navigateUp)
+        TopBar(
+            title = stringResource(R.string.app_name),
+            navigateUp = navigateUp
+        )
     }) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

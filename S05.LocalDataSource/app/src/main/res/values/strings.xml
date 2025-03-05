@@ -8,4 +8,6 @@
     <string name="action_cannot_be_undone">This action cannot be undone</string>
     <string name="cancel">Cancel</string>
     <string name="reset">Reset</string>
+    <string name="error_when_saving_note">Error when saving note</string>
+    <string name="toast_note_saved">Note %s saved</string>
 </resources>
