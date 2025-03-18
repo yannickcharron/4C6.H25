@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Remote DataSource</string>
+    <string name="celsius_format">%.2f °C</string>
+    <string name="fahrenheit_format">%.2f °F</string>
+    <string name="kelvin_format">%.2f K</string>
+    <string name="portals">Portals</string>
+</resources>
