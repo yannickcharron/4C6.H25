@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ca.qc.cstj.remotedatasource.ui.navigation.Destination
+import ca.qc.cstj.remotedatasource.ui.screens.planets.details.PlanetDetailsScreen
+import ca.qc.cstj.remotedatasource.ui.screens.planets.list.PlanetListScreen
 import ca.qc.cstj.remotedatasource.ui.theme.RemoteDataSourceTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,10 +30,13 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPaddings),
                         navController = navController,
-                        startDestination = "TODO"
+                        startDestination = Destination.PlanetList
                     ) {
-                        composable("TODO") {
-                            Text("TODO")
+                        composable<Destination.PlanetList> {
+                            PlanetListScreen()
+                        }
+                        composable<Destination.PlanetDetails> {
+                            PlanetDetailsScreen()
                         }
                     }
 
