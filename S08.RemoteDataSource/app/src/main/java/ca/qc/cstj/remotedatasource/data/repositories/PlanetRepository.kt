@@ -1,8 +1,15 @@
 package ca.qc.cstj.remotedatasource.data.repositories
 
 import android.util.Log
+import ca.qc.cstj.remotedatasource.core.Constants
+import ca.qc.cstj.remotedatasource.core.data.ListPlanetApiResult
 import ca.qc.cstj.remotedatasource.data.datasources.PlanetDataSource
 import ca.qc.cstj.remotedatasource.model.Planet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 //Faire la mise en continu à un interval
 //Faire du traitement de données
@@ -13,17 +20,21 @@ class PlanetRepository {
 
     private val _planetDataSource = PlanetDataSource()
 
-    fun retrieveAll() : List<Planet> {
-        try {
-            //run démarre une coroutine,car l'appel au serveur doit être fait de manière asynchrone
-            _planetDataSource.retrieveAll().run {
-                Log.d("PLANETS", this.toString())
-                return this
+    fun retrieveAll() : Flow<ListPlanetApiResult> {
+
+        return flow {
+            while(true) {
+                try {
+                    emit(ListPlanetApiResult.Loading)
+                    emit(ListPlanetApiResult.Success(_planetDataSource.retrieveAll()))
+                } catch (ex: Exception) {
+                    emit(ListPlanetApiResult.Error(ex, "Erreur lors de la réception des planètes"))
+                }
+                delay(Constants.RefreshDelays.PLANETS_REFRESH_TIMER)
             }
-        } catch (ex: Exception) {
-            Log.d("EXCEPTION", ex.toString())
-        }
-        return listOf()
+
+        }.flowOn(Dispatchers.IO)
+
     }
 
     fun retrieveOne()  {

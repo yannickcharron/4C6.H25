@@ -16,6 +16,6 @@ object Constants {
     }
 
     object RefreshDelays {
-
+        const val PLANETS_REFRESH_TIMER = 60000L
     }
 }
