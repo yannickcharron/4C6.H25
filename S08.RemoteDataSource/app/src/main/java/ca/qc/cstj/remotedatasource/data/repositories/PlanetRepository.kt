@@ -36,8 +36,19 @@ class PlanetRepository {
 
     }
 
-    fun retrieveOne()  {
+    fun retrieveOne(href: String) : Flow<ApiResult<Planet>> {
 
+        return flow {
+            while(true) {
+                try {
+                    emit(ApiResult.Loading)
+                    emit(ApiResult.Success(_planetDataSource.retrieveOne(href)))
+                } catch(ex: Exception) {
+                    emit(ApiResult.Error(ex, "Erreur lors de la réception de la planète"))
+                }
+                delay(Constants.RefreshDelays.PLANETS_REFRESH_TIMER)
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
 }

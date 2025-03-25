@@ -10,11 +10,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.remotedatasource.core.composables.ErrorMessage
 import ca.qc.cstj.remotedatasource.core.composables.LoadingAnimation
+import ca.qc.cstj.remotedatasource.model.Planet
 import ca.qc.cstj.remotedatasource.ui.components.PlanetCard
 
 @Composable
 fun PlanetListScreen(
-    viewModel: PlanetsListViewModel = viewModel()
+    viewModel: PlanetsListViewModel = viewModel(),
+    navigateToPlanetDetail: (Planet) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
@@ -31,7 +33,12 @@ fun PlanetListScreen(
             is PlanetsListScreenUiState.Success -> {
                 LazyColumn {
                     items(uiState.planets) {
-                        PlanetCard(planet = it)
+                        PlanetCard(
+                            planet = it,
+                            onClick = { planet ->
+                                navigateToPlanetDetail(planet)
+                            }
+                        )
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package ca.qc.cstj.remotedatasource.ui.navigation
 
+import ca.qc.cstj.remotedatasource.model.Planet
 import kotlinx.serialization.Serializable
 
 
@@ -9,6 +10,9 @@ sealed interface Destination {
     data object PlanetList : Destination
 
     @Serializable
-    data object PlanetDetails: Destination
+    data class PlanetDetails(val planet: Planet): Destination
+
+    @Serializable
+    data class PlanetDetailsHref(val href: String) : Destination
 
 }

@@ -11,10 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import ca.qc.cstj.remotedatasource.model.Planet
+import ca.qc.cstj.remotedatasource.ui.navigation.CustomNavType
 import ca.qc.cstj.remotedatasource.ui.navigation.Destination
-import ca.qc.cstj.remotedatasource.ui.screens.planets.details.PlanetDetailsScreen
+import ca.qc.cstj.remotedatasource.ui.screens.planets.details.DetailsPlanetScreen
+import ca.qc.cstj.remotedatasource.ui.screens.planets.details.DetailsPlanetScreenWithoutRefresh
 import ca.qc.cstj.remotedatasource.ui.screens.planets.list.PlanetListScreen
 import ca.qc.cstj.remotedatasource.ui.theme.RemoteDataSourceTheme
+import kotlin.reflect.typeOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,10 +37,25 @@ class MainActivity : ComponentActivity() {
                         startDestination = Destination.PlanetList
                     ) {
                         composable<Destination.PlanetList> {
-                            PlanetListScreen()
+                                //Version 1:
+//                            PlanetListScreen(
+//                                navigateToPlanetDetail = { planet -> navController.navigate(Destination.PlanetDetails(planet)) }
+//                            )
+                            PlanetListScreen(
+                                navigateToPlanetDetail = { planet -> navController.navigate(Destination.PlanetDetailsHref(planet.href)) }
+                            )
                         }
-                        composable<Destination.PlanetDetails> {
-                            PlanetDetailsScreen()
+                        composable<Destination.PlanetDetails>(
+                            typeMap = mapOf(
+                                typeOf<Planet>() to CustomNavType.PlanetType
+                            )
+                        ) {
+                            //Version 1: Parametre de type planet (avec une classe du modèle)
+                            val planet = it.toRoute<Destination.PlanetDetails>().planet
+                            DetailsPlanetScreenWithoutRefresh(planet)
+                        }
+                        composable<Destination.PlanetDetailsHref> {
+                            DetailsPlanetScreen()
                         }
                     }
 
