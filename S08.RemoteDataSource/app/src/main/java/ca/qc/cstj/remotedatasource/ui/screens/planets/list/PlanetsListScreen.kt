@@ -21,18 +21,22 @@ fun PlanetListScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        if(uiState.isError) {
-            ErrorMessage(uiState.exception!!)
-        }
-        else if(uiState.isLoading) {
-            LoadingAnimation()
-        } else {
-            LazyColumn {
-                items(uiState.planets) {
-                    PlanetCard(planet = it)
+        when(uiState) {
+            is PlanetsListScreenUiState.Error -> {
+                ErrorMessage(uiState.exception)
+            }
+            PlanetsListScreenUiState.Loading -> {
+                LoadingAnimation()
+            }
+            is PlanetsListScreenUiState.Success -> {
+                LazyColumn {
+                    items(uiState.planets) {
+                        PlanetCard(planet = it)
+                    }
                 }
             }
         }
+
 
     }
 

@@ -1,8 +1,7 @@
 package ca.qc.cstj.remotedatasource.data.repositories
 
-import android.util.Log
 import ca.qc.cstj.remotedatasource.core.Constants
-import ca.qc.cstj.remotedatasource.core.data.ListPlanetApiResult
+import ca.qc.cstj.remotedatasource.core.data.ApiResult
 import ca.qc.cstj.remotedatasource.data.datasources.PlanetDataSource
 import ca.qc.cstj.remotedatasource.model.Planet
 import kotlinx.coroutines.Dispatchers
@@ -20,15 +19,15 @@ class PlanetRepository {
 
     private val _planetDataSource = PlanetDataSource()
 
-    fun retrieveAll() : Flow<ListPlanetApiResult> {
+    fun retrieveAll() : Flow<ApiResult<List<Planet>>> {
 
         return flow {
             while(true) {
                 try {
-                    emit(ListPlanetApiResult.Loading)
-                    emit(ListPlanetApiResult.Success(_planetDataSource.retrieveAll()))
+                    emit(ApiResult.Loading)
+                    emit(ApiResult.Success(_planetDataSource.retrieveAll()))
                 } catch (ex: Exception) {
-                    emit(ListPlanetApiResult.Error(ex, "Erreur lors de la réception des planètes"))
+                    emit(ApiResult.Error(ex, "Erreur lors de la réception des planètes"))
                 }
                 delay(Constants.RefreshDelays.PLANETS_REFRESH_TIMER)
             }

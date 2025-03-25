@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.qc.cstj.remotedatasource.R
 import ca.qc.cstj.remotedatasource.model.Planet
-import ca.qc.cstj.remotedatasource.model.PlanetJSON
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
