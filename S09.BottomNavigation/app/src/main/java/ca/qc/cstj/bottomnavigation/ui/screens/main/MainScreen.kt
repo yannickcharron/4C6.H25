@@ -2,10 +2,17 @@ package ca.qc.cstj.bottomnavigation.ui.screens.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Landscape
+import androidx.compose.material.icons.filled.Person4
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,17 +22,52 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ca.qc.cstj.bottomnavigation.R
+import ca.qc.cstj.bottomnavigation.core.navigation.DestinationNavigationItem
 import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
 import ca.qc.cstj.bottomnavigation.ui.navigation.fromRoute
+import ca.qc.cstj.bottomnavigation.ui.screens.barcode.BarcodeScreen
+import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenBottomBar
+import ca.qc.cstj.bottomnavigation.ui.screens.orientation.OrientationScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.details.PlanetDetailsScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.list.PlanetListScreen
+import ca.qc.cstj.bottomnavigation.ui.screens.profile.ProfileScreen
+import ca.qc.cstj.bottomnavigation.ui.screens.weather.CurrentWeatherSection
+import ca.qc.cstj.bottomnavigation.ui.screens.weather.WeatherScreen
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel()
 ) {
 
-    //TODO: val navigationItems =
+    val navigationItems = listOf(
+        DestinationNavigationItem(
+            labelId = R.string.weather,
+            icon = Icons.Default.WbSunny,
+            destination = Destination.CurrentWeather
+        ),
+        DestinationNavigationItem(
+            labelId = R.string.planets,
+            icon = ImageVector.vectorResource(R.drawable.planet_24dp),
+            destination = Destination.PlanetList
+        ),
+        DestinationNavigationItem(
+            labelId = R.string.profile,
+            icon = Icons.Default.Person4,
+            destination = Destination.Profile
+        ),
+        DestinationNavigationItem(
+            labelId = R.string.barcode,
+            icon = Icons.Default.QrCodeScanner,
+            destination = Destination.Barcode
+        ),
+        DestinationNavigationItem(
+            labelId = R.string.orientation,
+            icon = Icons.Default.Landscape,
+            destination = Destination.Orientation
+        )
+
+    )
 
     val navController = rememberNavController()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -48,7 +90,10 @@ fun MainScreen(
             //TODO:
         },
         bottomBar = {
-            //TODO:
+            MainScreenBottomBar(
+                navController = navController,
+                items = navigationItems
+            )
         },
         snackbarHost = {
             //TODO:
@@ -67,6 +112,18 @@ fun MainScreen(
             }
             composable<Destination.PlanetDetail> {
                 PlanetDetailsScreen()
+            }
+            composable<Destination.CurrentWeather> {
+                 WeatherScreen()
+            }
+            composable<Destination.Profile> {
+                ProfileScreen()
+            }
+            composable<Destination.Barcode> {
+                BarcodeScreen()
+            }
+            composable<Destination.Orientation> {
+                OrientationScreen()
             }
         }
 

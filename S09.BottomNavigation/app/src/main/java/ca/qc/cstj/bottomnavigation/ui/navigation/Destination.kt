@@ -20,6 +20,12 @@ sealed interface Destination {
     @Serializable
     data object Profile: Destination
 
+    @Serializable
+    data object Barcode : Destination
+
+    @Serializable
+    data object Orientation: Destination
+
 }
 
 //https://proandroiddev.com/compose-navigation-2-8-0-f9ad34024624
