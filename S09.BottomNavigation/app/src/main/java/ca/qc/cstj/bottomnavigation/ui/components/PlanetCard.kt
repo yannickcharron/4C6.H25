@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.qc.cstj.bottomnavigation.R
+import ca.qc.cstj.bottomnavigation.core.Constants
 import ca.qc.cstj.bottomnavigation.core.painterResourceFromString
 import ca.qc.cstj.bottomnavigation.model.Planet
 import ca.qc.cstj.bottomnavigation.model.Portal
@@ -28,6 +29,7 @@ import com.skydoves.landscapist.glide.GlideImageState
 @Composable
 fun PlanetCard(
     planet: Planet,
+    unit: Constants.TemperatureUnit = Constants.TemperatureUnit.Celsius,
     onClick : (Planet) -> Unit = {}
 ) {
 
@@ -68,7 +70,11 @@ fun PlanetCard(
             ) {
                 Text(text = planet.name, style = MaterialTheme.typography.headlineMedium)
                 Text(
-                    text =  stringResource(id = R.string.kelvin_format, planet.temperature),
+                    text =  when(unit) {
+                        Constants.TemperatureUnit.Kelvin -> stringResource(id = R.string.kelvin_format, planet.temperature)
+                        Constants.TemperatureUnit.Celsius -> stringResource(id = R.string.celsius_format, planet.temperature)
+                        Constants.TemperatureUnit.Fahrenheit -> stringResource(id = R.string.fahrenheit_format, planet.temperature)
+                    },
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

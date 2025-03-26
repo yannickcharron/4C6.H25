@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.bottomnavigation.R
+import ca.qc.cstj.bottomnavigation.core.Constants
 import ca.qc.cstj.bottomnavigation.core.composables.ErrorMessage
 import ca.qc.cstj.bottomnavigation.core.composables.LoadingAnimation
 import ca.qc.cstj.bottomnavigation.ui.components.PlanetCard
@@ -41,7 +42,7 @@ fun PlanetDetailsScreen(
                 .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                PlanetCard(planet = uiState.planet)
+                PlanetCard(planet = uiState.planet, unit = Constants.TemperatureUnit.Kelvin)
                 Text(text = stringResource(R.string.portals), style = MaterialTheme.typography.headlineLarge)
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(uiState.planet.portals) {

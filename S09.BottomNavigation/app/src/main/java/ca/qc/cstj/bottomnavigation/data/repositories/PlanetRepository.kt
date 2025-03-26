@@ -35,12 +35,20 @@ class PlanetRepository {
         }.flowOn(Dispatchers.IO)
     }
 
-    fun retrieveAllWithRefresh() : Flow<ApiResult<List<Planet>>> {
+    fun retrieveAllWithRefresh(unit: Constants.TemperatureUnit) : Flow<ApiResult<List<Planet>>> {
         return flow {
             while(true) {
                 try {
                     emit(ApiResult.Loading)
-                    emit(ApiResult.Success(planetDataSource.retrieveAll()))
+                    emit(ApiResult.Success(planetDataSource.retrieveAll().map { p ->
+                        when(unit) {
+                            Constants.TemperatureUnit.Kelvin -> p
+                            Constants.TemperatureUnit.Celsius -> p.copy(temperature = p.temperature - KELVIN_BASE)
+                            Constants.TemperatureUnit.Fahrenheit -> p.copy(
+                                temperature = FAHRENHEIT_FACTOR * (p.temperature - KELVIN_BASE) + FAHRENHEIT_BASE
+                            )
+                        }
+                    }))
                 } catch(ex: Exception) {
                     emit(ApiResult.Error(ex))
                 }
