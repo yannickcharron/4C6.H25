@@ -1,5 +1,6 @@
 package ca.qc.cstj.bottomnavigation.ui.screens.weather
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,6 +32,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.bottomnavigation.R
 import ca.qc.cstj.bottomnavigation.core.Constants
+import ca.qc.cstj.bottomnavigation.core.composables.ErrorMessage
+import ca.qc.cstj.bottomnavigation.core.composables.LoadingAnimation
+import ca.qc.cstj.bottomnavigation.core.format
+import ca.qc.cstj.bottomnavigation.core.toLocalDateTimeFormat
+import ca.qc.cstj.bottomnavigation.data.datasources.weather.WeatherType
 import ca.qc.cstj.bottomnavigation.model.CurrentWeather
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -47,7 +54,24 @@ fun WeatherScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //TODO:
+        //TODO: SearchField
+
+        when(uiState) {
+            is WeatherScreenUiState.Error -> {
+                ErrorMessage(uiState.error)
+            }
+            WeatherScreenUiState.Loading -> {
+                LoadingAnimation()
+            }
+            is WeatherScreenUiState.Success -> {
+                CurrentWeatherSection(
+                    currentWeather = uiState.currentWeather,
+                    onMapClick =  {
+                        //TODO: Click du bouton pour afficher la carte (GoogleMap)
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -66,38 +90,38 @@ fun CurrentWeatherSection(currentWeather: CurrentWeather, onMapClick:() -> Unit)
         ) {
             Text(
                 modifier = Modifier.padding(top = 8.dp),
-                text = "TODO",
+                text = currentWeather.city,
                 style = MaterialTheme.typography.headlineMedium
             )
             GlideImage(modifier = Modifier.size(64.dp),
-                imageModel = { Constants.NetworkEndPoint.FLAGS_API_URL.format("TODO") })
+                imageModel = { Constants.NetworkEndPoint.FLAGS_API_URL.format(currentWeather.country) })
             Text(
-                text = "TODO",
+                text = currentWeather.locationDateTime.format(),
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "TODO",
+                text = currentWeather.systemDate.toLocalDateTimeFormat(),
                 style = MaterialTheme.typography.bodyMedium
             )
             WeatherImage(currentWeather = currentWeather)
             Text(
-                text = "TODO",
+                text = currentWeather.temperature.toString(),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                text = "TODO",
+                text = currentWeather.weather,
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
-                text = "TODO",
+                text = currentWeather.feelsLike.toString(),
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
-                text = "TODO",
+                text = "${currentWeather.latitude} ${currentWeather.longitude}",
                 style = MaterialTheme.typography.bodySmall
             )
             IconButton(onClick = {
@@ -137,5 +161,16 @@ private fun SearchField(
 
 @Composable
 fun WeatherImage(currentWeather: CurrentWeather) {
-    //TODO:
+
+    val weatherType = WeatherType.factory(
+        currentWeather.weather,
+        currentWeather.description,
+        currentWeather.systemDate
+    )
+
+    Image(
+        modifier = Modifier.size(128.dp),
+        painter = painterResource(weatherType.id),
+        contentDescription = currentWeather.weather
+    )
 }
