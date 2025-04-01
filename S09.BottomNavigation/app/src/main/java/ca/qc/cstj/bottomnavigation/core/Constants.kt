@@ -24,16 +24,18 @@ object Constants {
         const val PLANETS_REFRESH = 1000L * 60
     }
 
+    //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+    //https://api.openweathermap.org/data/2.5/weather?q=Beirut&units=metric&appid=ae152a05c72c228055a11bfe56cd3ac2
     object NetworkEndPoint {
         private const val BASE_URL = "https://api.openweathermap.org"
-        const val API_KEY = "adc629c4920c4d118eefa477656aaa20"
-        //ae152a05c72c228055a11bfe56cd3ac2
+        const val API_KEY = "ae152a05c72c228055a11bfe56cd3ac2"
         const val UNITS = "metric"
         const val FORECAST_END_POINT = "$BASE_URL/data/2.5/forecast"
         const val CURRENT_WEATHER_END_POINT = "$BASE_URL/data/2.5/weather"
         const val DEFAULTS_OPTIONS = "&units=${UNITS}&appid=${API_KEY}"
         const val WEATHER_ICON_URL = "https://openweathermap.org/img/w/%s.png"
         const val FLAGS_URL = "https://flagcdn.com/%s.svg"
+        const val CURRENT_WEATHER_URL = "$CURRENT_WEATHER_END_POINT?q=%s$DEFAULTS_OPTIONS"
         const val FLAGS_API_URL = "https://flagsapi.com/%s/flat/64.png"
     }
 
