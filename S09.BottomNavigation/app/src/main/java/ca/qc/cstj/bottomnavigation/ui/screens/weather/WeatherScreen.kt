@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,9 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,23 +57,29 @@ fun WeatherScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //TODO: SearchField
 
-        when(uiState) {
-            is WeatherScreenUiState.Error -> {
-                ErrorMessage(uiState.error)
+        SearchField(
+            searchText = uiState.searchText,
+            onChangeSearchText = { viewModel.updateSearchTextState(it) },
+            onSearchClick = { viewModel.search() }
+        )
+
+        when(uiState.currentWeatherState) {
+            is CurrentWeatherState.Error -> {
+                ErrorMessage(uiState.currentWeatherState.error)
             }
-            WeatherScreenUiState.Loading -> {
+            CurrentWeatherState.Loading -> {
                 LoadingAnimation()
             }
-            is WeatherScreenUiState.Success -> {
+            is CurrentWeatherState.Success -> {
                 CurrentWeatherSection(
-                    currentWeather = uiState.currentWeather,
+                    currentWeather = uiState.currentWeatherState.currentWeather,
                     onMapClick =  {
                         //TODO: Click du bouton pour afficher la carte (GoogleMap)
                     }
                 )
             }
+            CurrentWeatherState.Idle -> { /* RIEN à afficher icitte*/ }
         }
     }
 }
@@ -81,7 +90,8 @@ fun CurrentWeatherSection(currentWeather: CurrentWeather, onMapClick:() -> Unit)
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth(0.8f)
-            .fillMaxHeight(0.6f),
+            .fillMaxHeight(0.6f)
+            .padding(top = 32.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(
@@ -105,7 +115,7 @@ fun CurrentWeatherSection(currentWeather: CurrentWeather, onMapClick:() -> Unit)
             )
             WeatherImage(currentWeather = currentWeather)
             Text(
-                text = currentWeather.temperature.toString(),
+                text = stringResource(R.string.temperature_value_in_celsius, currentWeather.temperature),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
             )
@@ -115,13 +125,18 @@ fun CurrentWeatherSection(currentWeather: CurrentWeather, onMapClick:() -> Unit)
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                text = currentWeather.description,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
                 modifier = Modifier.padding(bottom = 4.dp),
-                text = currentWeather.feelsLike.toString(),
+                text = stringResource(R.string.feels_like_temperature_in_celsius, currentWeather.feelsLike),
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
-                text = "${currentWeather.latitude} ${currentWeather.longitude}",
+                text = stringResource(R.string.geographic_position, currentWeather.latitude, currentWeather.longitude),
                 style = MaterialTheme.typography.bodySmall
             )
             IconButton(onClick = {
@@ -140,6 +155,8 @@ fun CurrentWeatherSection(currentWeather: CurrentWeather, onMapClick:() -> Unit)
 private fun SearchField(
     searchText: String, onChangeSearchText: (String) -> Unit, onSearchClick: () -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = searchText,
@@ -147,8 +164,12 @@ private fun SearchField(
         label = {
             Text(text = stringResource(R.string.search_for_city))
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        maxLines = 1,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = {
+            onSearchClick()
+            keyboardController?.hide()
+        }),
+        maxLines = 1, singleLine = true,
         trailingIcon = {
             IconButton(onClick = { onSearchClick() }) {
                 Icon(

@@ -6,11 +6,11 @@ import kotlinx.serialization.SerialName
 @Serializable
 data class CurrentWeatherDTO(
     @SerialName("base")
-    val base: String?,
+    val base: String? = "",
     @SerialName("clouds")
-    val clouds: Clouds?,
+    val clouds: Clouds? = Clouds(),
     @SerialName("cod")
-    val cod: Int?,
+    val cod: Int? = 0,
     @SerialName("coord")
     val coord: Coord?,
     @SerialName("dt")
@@ -36,7 +36,7 @@ data class CurrentWeatherDTO(
 @Serializable
 data class Clouds(
     @SerialName("all")
-    val all: Int?
+    val all: Int? = 0
 )
 
 @Serializable
