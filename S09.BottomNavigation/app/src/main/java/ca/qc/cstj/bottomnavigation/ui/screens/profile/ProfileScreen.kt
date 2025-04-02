@@ -13,16 +13,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.bottomnavigation.R
+import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
+import ca.qc.cstj.bottomnavigation.ui.screens.main.MainViewModel
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(),
+    sendMainScreenSideEffect : (MainViewModel.ChildrenSideEffect) -> Unit = {}
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(true) {
         //TODO: UpdateBadges
+        sendMainScreenSideEffect(MainViewModel.ChildrenSideEffect.UpdateBadges(
+            mapOf(Destination.PlanetList to "5")
+            //monDictionnaire[Destination.PlanetList] = 5
+        ))
     }
 
     Column(
@@ -30,7 +37,10 @@ fun ProfileScreen(
     ) {
         Button(
             onClick = {
-                //TODO: UpdateBadges
+                sendMainScreenSideEffect(MainViewModel.ChildrenSideEffect.UpdateBadges(
+                    mapOf(Destination.Barcode to "New")
+                    //monDictionnaire[Destination.PlanetList] = 5
+                ))
             }
         ) {
             Text(text = stringResource(R.string.add_notification))

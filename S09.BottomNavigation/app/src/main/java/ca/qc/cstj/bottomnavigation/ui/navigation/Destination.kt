@@ -1,6 +1,7 @@
 package ca.qc.cstj.bottomnavigation.ui.navigation
 
 import androidx.navigation.NavBackStackEntry
+import ca.qc.cstj.bottomnavigation.R
 import kotlinx.serialization.Serializable
 
 
@@ -26,6 +27,25 @@ sealed interface Destination {
     @Serializable
     data object Orientation: Destination
 
+    fun title() : Int {
+        return when(this) {
+            Barcode -> R.string.barcode
+            CurrentWeather -> R.string.weather
+            Favorites -> R.string.favorites
+            Orientation -> R.string.orientation
+            is PlanetDetail -> R.string.title_planet_detail
+            PlanetList -> R.string.planets
+            Profile -> R.string.profile
+        }
+    }
+
+    fun isNavigateUpVisible() : Boolean {
+        return when(this) {
+            is PlanetDetail -> true
+            else -> false
+        }
+    }
+
 }
 
 //https://proandroiddev.com/compose-navigation-2-8-0-f9ad34024624
@@ -41,8 +61,10 @@ fun NavBackStackEntry?.fromRoute() : Destination {
                 Destination.CurrentWeather::class.simpleName -> Destination.CurrentWeather
                 Destination.Favorites::class.simpleName -> Destination.Favorites
                 Destination.Profile::class.simpleName -> Destination.Profile
-                else -> Destination.PlanetList
+                Destination.Barcode::class.simpleName -> Destination.Barcode
+                Destination.Orientation::class.simpleName -> Destination.Orientation
+                else -> Destination.CurrentWeather
             }
         }
-    return Destination.PlanetList
+    return Destination.CurrentWeather
 }

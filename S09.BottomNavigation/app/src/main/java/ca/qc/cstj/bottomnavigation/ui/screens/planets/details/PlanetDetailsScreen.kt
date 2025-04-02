@@ -25,9 +25,10 @@ import ca.qc.cstj.bottomnavigation.ui.screens.main.MainViewModel
 @Composable
 fun PlanetDetailsScreen(
     viewModel: PlanetDetailsViewModel = viewModel(),
-    sendMainScreenSideEffect : (MainViewModel.ExternalSideEffect) -> Unit = {}
+    sendMainScreenSideEffect : (MainViewModel.ChildrenSideEffect) -> Unit = {}
 ) {
 
+    sendMainScreenSideEffect(MainViewModel.ChildrenSideEffect.FormatTitle(titleArgs = listOf("Yannick")))
     when(val uiState = viewModel.uiState.collectAsStateWithLifecycle().value) {
         is PlanetDetailsScreenUiState.Error -> {
             ErrorMessage(ex = uiState.exception)
@@ -36,7 +37,7 @@ fun PlanetDetailsScreen(
             LoadingAnimation()
         }
         is PlanetDetailsScreenUiState.Success -> {
-            //TODO: Format Top Bar
+            sendMainScreenSideEffect(MainViewModel.ChildrenSideEffect.FormatTitle(titleArgs = listOf(uiState.planet.name)))
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),

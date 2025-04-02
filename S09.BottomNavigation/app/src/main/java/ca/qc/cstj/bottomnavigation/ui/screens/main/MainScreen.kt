@@ -28,6 +28,7 @@ import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
 import ca.qc.cstj.bottomnavigation.ui.navigation.fromRoute
 import ca.qc.cstj.bottomnavigation.ui.screens.barcode.BarcodeScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenBottomBar
+import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenTopBar
 import ca.qc.cstj.bottomnavigation.ui.screens.orientation.OrientationScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.details.PlanetDetailsScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.list.PlanetListScreen
@@ -87,12 +88,17 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            //TODO:
+            MainScreenTopBar(
+                currentDestination = currentDestination,
+                titleFormatArgs = uiState.titleArgs.toTypedArray(),
+                onNavigateUp = { navController.navigateUp() }
+            )
         },
         bottomBar = {
             MainScreenBottomBar(
                 navController = navController,
-                items = navigationItems
+                items = navigationItems,
+                badges = uiState.bottomBarBadges
             )
         },
         snackbarHost = {
@@ -103,7 +109,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPaddings),
             navController = navController,
-            startDestination = Destination.PlanetList
+            startDestination = Destination.CurrentWeather
         ) {
             composable<Destination.PlanetList> {
                 PlanetListScreen(toPlanetDetailScreen = { href ->
@@ -111,13 +117,21 @@ fun MainScreen(
                 })
             }
             composable<Destination.PlanetDetail> {
-                PlanetDetailsScreen()
+                PlanetDetailsScreen(
+                    sendMainScreenSideEffect = { childrenSideEffect ->
+                        viewModel.onSideEffect(childrenSideEffect)
+                    }
+                )
             }
             composable<Destination.CurrentWeather> {
                  WeatherScreen()
             }
             composable<Destination.Profile> {
-                ProfileScreen()
+                ProfileScreen(
+                    sendMainScreenSideEffect = { childrenSideEffect ->
+                        viewModel.onSideEffect(childrenSideEffect)
+                    }
+                )
             }
             composable<Destination.Barcode> {
                 BarcodeScreen()

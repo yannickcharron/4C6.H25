@@ -56,4 +56,5 @@
     <string name="calculator">Calculator</string>
     <string name="end_timer">Fin du timer</string>
     <string name="open">Open</string>
+    <string name="navigate_up">Navigate Up</string>
 </resources>

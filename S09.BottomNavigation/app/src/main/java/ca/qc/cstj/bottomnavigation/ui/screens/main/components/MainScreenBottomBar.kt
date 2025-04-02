@@ -1,6 +1,8 @@
 package ca.qc.cstj.bottomnavigation.ui.screens.main.components
 
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -17,11 +19,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ca.qc.cstj.bottomnavigation.core.navigation.DestinationNavigationItem
 import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
+import ca.qc.cstj.bottomnavigation.ui.screens.main.MainViewModel
 
 @Composable
 fun MainScreenBottomBar(
     navController: NavController,
-    items : List<DestinationNavigationItem<out Destination>>
+    items : List<DestinationNavigationItem<out Destination>>,
+    badges: Map<Destination, String> = mapOf()
 ) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -31,7 +35,18 @@ fun MainScreenBottomBar(
         items.forEach { item ->
             NavigationBarItem(
                 label = { Text(text = stringResource(item.labelId)) },
-                icon = { NavigationBarItemIcon(item) },
+                icon = {
+                   BadgedBox(badge = {
+                        if(badges.containsKey(item.destination)) {
+                            Badge {
+                                Text(text = badges[item.destination] ?: "")
+                            }
+                        }
+                   }) {
+                       NavigationBarItemIcon(item)
+                   }
+
+                },
                 selected = currentDestination?.hierarchy?.any { it.hasRoute(item.destination::class) } == true,
                 onClick = {
                     navController.navigate(item.destination) {
