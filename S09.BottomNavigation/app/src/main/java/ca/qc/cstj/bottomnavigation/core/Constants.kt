@@ -1,7 +1,7 @@
 package ca.qc.cstj.bottomnavigation.core
 
 object Constants {
-    const val DOOR = 7
+    const val DOOR = 2
     const val DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
     const val IMAGE_URL = "https://assets.andromia.science/planets/%s.png"
     const val NIGHT_HOUR = 19

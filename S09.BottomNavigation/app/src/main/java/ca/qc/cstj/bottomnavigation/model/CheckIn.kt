@@ -1,5 +1,6 @@
 package ca.qc.cstj.bottomnavigation.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

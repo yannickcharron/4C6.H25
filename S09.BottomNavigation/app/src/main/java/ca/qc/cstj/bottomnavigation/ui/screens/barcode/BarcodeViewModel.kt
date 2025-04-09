@@ -2,8 +2,10 @@ package ca.qc.cstj.bottomnavigation.ui.screens.barcode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ca.qc.cstj.bottomnavigation.core.Constants
 import ca.qc.cstj.bottomnavigation.core.data.ApiResult
 import ca.qc.cstj.bottomnavigation.data.repositories.CheckInRepository
+import ca.qc.cstj.bottomnavigation.model.CheckIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,7 +34,18 @@ class BarcodeViewModel : ViewModel() {
     }
 
     fun addCheckIn(codeValue: String) {
-       //TODO:
+
+        viewModelScope.launch {
+            val newCheckIn = CheckIn(codeValue, Constants.DOOR)
+            checkInRepository.create(newCheckIn).collect { apiResult ->
+                when(apiResult) {
+                    is ApiResult.Error -> { /* Impossible d'ajouter le checkin */ }
+                    ApiResult.Loading -> {}
+                    is ApiResult.Success -> { /* Checkin Ajouté */ }
+                }
+            }
+        }
+
     }
 
 }

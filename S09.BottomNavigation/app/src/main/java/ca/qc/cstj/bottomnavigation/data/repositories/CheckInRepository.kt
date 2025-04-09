@@ -22,8 +22,14 @@ class CheckInRepository {
         }.flowOn(Dispatchers.IO)
     }
 
-    fun create(checkIn: CheckIn) {
-        //TODO:
+    fun create(checkIn: CheckIn) :Flow<ApiResult<CheckIn>> {
+        return flow {
+            try {
+                emit(ApiResult.Success(checkInDataSource.create(checkIn)))
+            } catch(ex: Exception) {
+                emit(ApiResult.Error(ex))
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
 }

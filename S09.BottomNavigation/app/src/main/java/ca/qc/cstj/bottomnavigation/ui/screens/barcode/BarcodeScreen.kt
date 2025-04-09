@@ -1,5 +1,6 @@
 package ca.qc.cstj.bottomnavigation.ui.screens.barcode
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,10 @@ import ca.qc.cstj.bottomnavigation.R
 import ca.qc.cstj.bottomnavigation.core.composables.ErrorMessage
 import ca.qc.cstj.bottomnavigation.core.composables.LoadingAnimation
 import ca.qc.cstj.bottomnavigation.model.CheckIn
+import io.github.g00fy2.quickie.QRResult
+import io.github.g00fy2.quickie.ScanCustomCode
+import io.github.g00fy2.quickie.config.BarcodeFormat
+import io.github.g00fy2.quickie.config.ScannerConfig
 
 @Composable
 fun BarcodeScreen(viewModel: BarcodeViewModel = viewModel()) {
@@ -47,6 +52,17 @@ fun BarcodeScreen(viewModel: BarcodeViewModel = viewModel()) {
     }
 
    //TODO:
+    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanCustomCode()) { qrResult ->
+        when(qrResult) {
+            is QRResult.QRError -> { /* Message l'utilisateur de l'erreur */ }
+            QRResult.QRMissingPermission -> { /* Je n'ai pas permission */ }
+            is QRResult.QRSuccess -> {
+                //TODO: appelle au viewModel
+                viewModel.addCheckIn(qrResult.content.rawValue ?: "")
+            }
+            QRResult.QRUserCanceled -> {}
+        }
+    }
 
 
     when(val uiState = viewModel.uiState.collectAsStateWithLifecycle().value) {
@@ -58,7 +74,14 @@ fun BarcodeScreen(viewModel: BarcodeViewModel = viewModel()) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(onClick = {
-                    //TODO:
+                    scanQrCodeLauncher.launch(
+                        ScannerConfig.build {
+                            setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE))
+                            setOverlayStringRes(R.string.scan_the_id)
+                            setOverlayDrawableRes(R.drawable.planet_24dp)
+                            setShowCloseButton(true)
+                        }
+                    )
                 }) {
                     Text(text = stringResource(R.string.check_in))
                 }

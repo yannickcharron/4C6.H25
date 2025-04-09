@@ -45,7 +45,6 @@ fun MainScreenBottomBar(
                    }) {
                        NavigationBarItemIcon(item)
                    }
-
                 },
                 selected = currentDestination?.hierarchy?.any { it.hasRoute(item.destination::class) } == true,
                 onClick = {
