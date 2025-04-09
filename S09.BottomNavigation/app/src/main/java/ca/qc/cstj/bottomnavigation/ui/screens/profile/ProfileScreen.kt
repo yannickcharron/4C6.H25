@@ -19,7 +19,8 @@ import ca.qc.cstj.bottomnavigation.ui.screens.main.MainViewModel
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(),
-    sendMainScreenSideEffect : (MainViewModel.ChildrenSideEffect) -> Unit = {}
+    sendMainScreenSideEffect : (MainViewModel.ChildrenSideEffect) -> Unit = {},
+    toMapScreen : () -> Unit
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -55,7 +56,7 @@ fun ProfileScreen(
 
         Button(
             onClick = {
-                //TODO: TO MapScreen
+                toMapScreen()
             }
         ) {
             Text(text = stringResource(R.string.map))

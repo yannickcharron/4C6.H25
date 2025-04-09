@@ -27,6 +27,9 @@ sealed interface Destination {
     @Serializable
     data object Orientation: Destination
 
+    @Serializable
+    data object Map : Destination
+
     fun title() : Int {
         return when(this) {
             Barcode -> R.string.barcode
@@ -36,15 +39,33 @@ sealed interface Destination {
             is PlanetDetail -> R.string.title_planet_detail
             PlanetList -> R.string.planets
             Profile -> R.string.profile
+            Map -> R.string.maps
         }
     }
 
     fun isNavigateUpVisible() : Boolean {
         return when(this) {
             is PlanetDetail -> true
+            Map -> true
             else -> false
         }
     }
+
+    fun isBottomBarVisible(): Boolean {
+        return when(this) {
+            Map -> false
+            else -> true
+        }
+    }
+
+    fun isTopBarVisible() : Boolean {
+        return when(this) {
+            Map -> false
+            else -> true
+        }
+    }
+
+
 
 }
 
@@ -63,6 +84,7 @@ fun NavBackStackEntry?.fromRoute() : Destination {
                 Destination.Profile::class.simpleName -> Destination.Profile
                 Destination.Barcode::class.simpleName -> Destination.Barcode
                 Destination.Orientation::class.simpleName -> Destination.Orientation
+                Destination.Map::class.simpleName -> Destination.Map
                 else -> Destination.CurrentWeather
             }
         }

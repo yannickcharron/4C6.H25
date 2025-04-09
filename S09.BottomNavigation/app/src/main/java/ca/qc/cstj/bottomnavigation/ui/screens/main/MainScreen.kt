@@ -29,6 +29,7 @@ import ca.qc.cstj.bottomnavigation.ui.navigation.fromRoute
 import ca.qc.cstj.bottomnavigation.ui.screens.barcode.BarcodeScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenBottomBar
 import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenTopBar
+import ca.qc.cstj.bottomnavigation.ui.screens.maps.MapScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.orientation.OrientationScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.details.PlanetDetailsScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.planets.list.PlanetListScreen
@@ -88,18 +89,22 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            MainScreenTopBar(
-                currentDestination = currentDestination,
-                titleFormatArgs = uiState.titleArgs.toTypedArray(),
-                onNavigateUp = { navController.navigateUp() }
-            )
+            if(currentDestination.isTopBarVisible()) {
+                MainScreenTopBar(
+                    currentDestination = currentDestination,
+                    titleFormatArgs = uiState.titleArgs.toTypedArray(),
+                    onNavigateUp = { navController.navigateUp() }
+                )
+            }
         },
         bottomBar = {
-            MainScreenBottomBar(
-                navController = navController,
-                items = navigationItems,
-                badges = uiState.bottomBarBadges
-            )
+            if(currentDestination.isBottomBarVisible()) {
+                MainScreenBottomBar(
+                    navController = navController,
+                    items = navigationItems,
+                    badges = uiState.bottomBarBadges
+                )
+            }
         },
         snackbarHost = {
             //TODO:
@@ -130,6 +135,9 @@ fun MainScreen(
                 ProfileScreen(
                     sendMainScreenSideEffect = { childrenSideEffect ->
                         viewModel.onSideEffect(childrenSideEffect)
+                    },
+                    toMapScreen = {
+                        navController.navigate(Destination.Map)
                     }
                 )
             }
@@ -138,6 +146,9 @@ fun MainScreen(
             }
             composable<Destination.Orientation> {
                 OrientationScreen()
+            }
+            composable<Destination.Map> {
+                MapScreen()
             }
         }
 
