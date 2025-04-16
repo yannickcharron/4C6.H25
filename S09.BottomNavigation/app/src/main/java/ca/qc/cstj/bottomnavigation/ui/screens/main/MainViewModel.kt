@@ -1,12 +1,14 @@
 package ca.qc.cstj.bottomnavigation.ui.screens.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
@@ -28,16 +30,22 @@ class MainViewModel : ViewModel() {
                     it.copy(bottomBarBadges = sideEffect.badges)
                 }
             }
+            is ChildrenSideEffect.ShowSnackbar -> {
+                viewModelScope.launch {
+                    _sideEffectChannel.send(SideEffect.ShowSnackbar(sideEffect.message, sideEffect.actionLabel))
+                }
+            }
         }
     }
 
     sealed interface ChildrenSideEffect {
         data class FormatTitle(val titleArgs: List<Any>):ChildrenSideEffect
         data class UpdateBadges(val badges: Map<Destination, String> ):ChildrenSideEffect
+        data class ShowSnackbar(val message:String, val actionLabel: String) : ChildrenSideEffect
     }
 
     sealed interface SideEffect {
-        //TODO:
+        data class ShowSnackbar(val message: String, val actionLabel: String) : SideEffect
     }
 
 }

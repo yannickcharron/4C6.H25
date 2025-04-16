@@ -57,4 +57,6 @@
     <string name="end_timer">Fin du timer</string>
     <string name="open">Open</string>
     <string name="navigate_up">Navigate Up</string>
+    <string name="message_mettre_dans_le_snackbar">Message à mettre dans le SnackBar</string>
+    <string name="fin_du_timer">Fin du timer</string>
 </resources>

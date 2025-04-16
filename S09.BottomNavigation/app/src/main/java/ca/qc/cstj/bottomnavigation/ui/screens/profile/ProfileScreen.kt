@@ -8,8 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ca.qc.cstj.bottomnavigation.R
@@ -24,6 +27,7 @@ fun ProfileScreen(
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val currentContext  = LocalContext.current
 
     LaunchedEffect(true) {
         //TODO: UpdateBadges
@@ -34,7 +38,9 @@ fun ProfileScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
     ) {
         Button(
             onClick = {
@@ -48,7 +54,9 @@ fun ProfileScreen(
         }
         Button(
             onClick = {
-                //TODO: Snackbar
+                val message = currentContext.getString(R.string.message_mettre_dans_le_snackbar)
+                sendMainScreenSideEffect(MainViewModel.ChildrenSideEffect
+                    .ShowSnackbar(message, "Fermer"))
             }
         ) {
             Text(text = stringResource(R.string.snackbar))
@@ -62,7 +70,11 @@ fun ProfileScreen(
             Text(text = stringResource(R.string.map))
         }
 
-        //TODO: TIMER
+        if(uiState.isCompleted) {
+            Text(text = stringResource(R.string.fin_du_timer), color = Color.Magenta, fontSize = 32.sp)
+        } else {
+            Text(text = uiState.progression.toString(), color = Color.Green, fontSize = 32.sp)
+        }
 
     }
 

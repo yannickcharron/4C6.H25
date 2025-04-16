@@ -2,14 +2,21 @@ package ca.qc.cstj.bottomnavigation.ui.screens.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Landscape
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -37,6 +44,7 @@ import ca.qc.cstj.bottomnavigation.ui.screens.planets.list.PlanetListScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.profile.ProfileScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.weather.CurrentWeatherSection
 import ca.qc.cstj.bottomnavigation.ui.screens.weather.WeatherScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -80,10 +88,24 @@ fun MainScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    val snackbarHostState =  remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(viewModel.sideEffectFlow) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.sideEffectFlow.collect { sideEffect ->
-                //TODO:
+                when(sideEffect) {
+                    is MainViewModel.SideEffect.ShowSnackbar -> {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = sideEffect.message,
+                                actionLabel = sideEffect.actionLabel,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -108,8 +130,13 @@ fun MainScreen(
             }
         },
         snackbarHost = {
-            //TODO:
-    }) { innerPaddings ->
+            SnackbarHost(
+                hostState = snackbarHostState, modifier = Modifier.systemBarsPadding()
+            ) {
+                Snackbar(snackbarData = it)
+            }
+        }
+    ) { innerPaddings ->
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
