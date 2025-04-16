@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import ca.qc.cstj.bottomnavigation.R
 import ca.qc.cstj.bottomnavigation.core.navigation.DestinationNavigationItem
 import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
@@ -129,15 +130,19 @@ fun MainScreen(
                 )
             }
             composable<Destination.CurrentWeather> {
-                 WeatherScreen()
+                 WeatherScreen(
+                     toMapScreen = { latLng ->
+                         navController.navigate(Destination.Map(latLng.latitude, latLng.longitude))
+                     }
+                 )
             }
             composable<Destination.Profile> {
                 ProfileScreen(
                     sendMainScreenSideEffect = { childrenSideEffect ->
                         viewModel.onSideEffect(childrenSideEffect)
                     },
-                    toMapScreen = {
-                        navController.navigate(Destination.Map)
+                    toMapScreen = { lat, lng ->
+                        navController.navigate(Destination.Map(lat, lng))
                     }
                 )
             }
@@ -148,7 +153,8 @@ fun MainScreen(
                 OrientationScreen()
             }
             composable<Destination.Map> {
-                MapScreen()
+                val args = it.toRoute<Destination.Map>()
+                MapScreen(args.lat, args.lng)
             }
         }
 

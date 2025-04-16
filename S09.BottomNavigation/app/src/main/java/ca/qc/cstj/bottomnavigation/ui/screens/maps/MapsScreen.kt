@@ -29,7 +29,7 @@ import com.google.maps.android.compose.rememberMarkerState
 //https://google.github.io/accompanist/permissions/
 //https://medium.com/@rzmeneghelo/how-to-request-permissions-in-jetpack-compose-a-step-by-step-guide-7ce4b7782bd7
 @Composable
-fun MapScreen() {
+fun MapScreen(lat: Double, lng: Double) {
 
     val permissions = listOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -38,7 +38,7 @@ fun MapScreen() {
 
     var isMapLoaded by remember { mutableStateOf(false) }
 
-    val latLng = LatLng(45.779388,-74.000163)
+    val latLng = LatLng(lat, lng)
 
     val cameraPositionState =  rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(latLng, 10f)
@@ -66,7 +66,7 @@ fun MapScreen() {
                 Marker(
                     state = rememberMarkerState(position = latLng),
                     snippet = "${latLng.latitude} ${latLng.longitude}",
-                    title = "Cégep",
+                    title = "TO BE CONTINUED",
                     icon = wifiIcon
                 )
 

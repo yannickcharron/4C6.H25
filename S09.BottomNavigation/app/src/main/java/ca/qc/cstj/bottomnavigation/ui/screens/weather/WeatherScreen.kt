@@ -41,11 +41,13 @@ import ca.qc.cstj.bottomnavigation.core.format
 import ca.qc.cstj.bottomnavigation.core.toLocalDateTimeFormat
 import ca.qc.cstj.bottomnavigation.data.datasources.weather.WeatherType
 import ca.qc.cstj.bottomnavigation.model.CurrentWeather
+import com.google.android.gms.maps.model.LatLng
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun WeatherScreen(
-    viewModel: WeatherViewModel = viewModel()
+    viewModel: WeatherViewModel = viewModel(),
+    toMapScreen: (LatLng) -> Unit
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -75,7 +77,12 @@ fun WeatherScreen(
                 CurrentWeatherSection(
                     currentWeather = uiState.currentWeatherState.currentWeather,
                     onMapClick =  {
-                        //TODO: Click du bouton pour afficher la carte (GoogleMap)
+                        //FIXME: Ceci pourrait être mieux dans un getter du viewModel
+                        val latLng = LatLng(
+                            uiState.currentWeatherState.currentWeather.latitude,
+                            uiState.currentWeatherState.currentWeather.longitude
+                        )
+                        toMapScreen(latLng)
                     }
                 )
             }

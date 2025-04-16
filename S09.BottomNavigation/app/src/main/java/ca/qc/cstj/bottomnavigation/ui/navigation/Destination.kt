@@ -28,7 +28,7 @@ sealed interface Destination {
     data object Orientation: Destination
 
     @Serializable
-    data object Map : Destination
+    data class Map(val lat: Double, val lng: Double) : Destination
 
     fun title() : Int {
         return when(this) {
@@ -39,34 +39,31 @@ sealed interface Destination {
             is PlanetDetail -> R.string.title_planet_detail
             PlanetList -> R.string.planets
             Profile -> R.string.profile
-            Map -> R.string.maps
+            is Map -> R.string.maps
         }
     }
 
     fun isNavigateUpVisible() : Boolean {
         return when(this) {
             is PlanetDetail -> true
-            Map -> true
+            is Map -> true
             else -> false
         }
     }
 
     fun isBottomBarVisible(): Boolean {
         return when(this) {
-            Map -> false
+            is Map -> false
             else -> true
         }
     }
 
     fun isTopBarVisible() : Boolean {
         return when(this) {
-            Map -> false
+            is Map -> false
             else -> true
         }
     }
-
-
-
 }
 
 //https://proandroiddev.com/compose-navigation-2-8-0-f9ad34024624
@@ -84,7 +81,7 @@ fun NavBackStackEntry?.fromRoute() : Destination {
                 Destination.Profile::class.simpleName -> Destination.Profile
                 Destination.Barcode::class.simpleName -> Destination.Barcode
                 Destination.Orientation::class.simpleName -> Destination.Orientation
-                Destination.Map::class.simpleName -> Destination.Map
+                Destination.Map::class.simpleName -> Destination.Map(0.0,0.0)
                 else -> Destination.CurrentWeather
             }
         }
