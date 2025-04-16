@@ -35,6 +35,7 @@ import ca.qc.cstj.bottomnavigation.core.navigation.DestinationNavigationItem
 import ca.qc.cstj.bottomnavigation.ui.navigation.Destination
 import ca.qc.cstj.bottomnavigation.ui.navigation.fromRoute
 import ca.qc.cstj.bottomnavigation.ui.screens.barcode.BarcodeScreen
+import ca.qc.cstj.bottomnavigation.ui.screens.login.LoginScreen
 import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenBottomBar
 import ca.qc.cstj.bottomnavigation.ui.screens.main.components.MainScreenTopBar
 import ca.qc.cstj.bottomnavigation.ui.screens.maps.MapScreen
@@ -142,7 +143,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPaddings),
             navController = navController,
-            startDestination = Destination.CurrentWeather
+            startDestination = Destination.Login
         ) {
             composable<Destination.PlanetList> {
                 PlanetListScreen(toPlanetDetailScreen = { href ->
@@ -182,6 +183,19 @@ fun MainScreen(
             composable<Destination.Map> {
                 val args = it.toRoute<Destination.Map>()
                 MapScreen(args.lat, args.lng)
+            }
+            composable<Destination.Login> {
+                LoginScreen(
+                    navigateToMain = {
+                        navController.navigate(Destination.Profile) {
+                            popUpTo<Destination.Login> {
+                                inclusive = true
+                                saveState = true
+                            }
+                            restoreState = true
+                        }
+                    }
+                )
             }
         }
 

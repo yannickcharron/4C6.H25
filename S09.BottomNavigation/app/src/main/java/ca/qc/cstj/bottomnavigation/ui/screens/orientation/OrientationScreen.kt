@@ -1,8 +1,13 @@
 package ca.qc.cstj.bottomnavigation.ui.screens.orientation
 
+import android.content.Intent
+import android.content.res.Configuration
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -15,31 +20,56 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import ca.qc.cstj.bottomnavigation.R
+import ca.qc.cstj.bottomnavigation.core.composables.YoutubePlayer
 
 @Composable
 fun OrientationScreen() {
-    //TODO:
+    val orientation = LocalConfiguration.current.orientation
+    if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        LandscapeMode()
+    } else {
+        PortraitMode()
+    }
 }
 
 @Composable
 private fun LandscapeMode() {
-    //TODO:
+    Row(
+        modifier = Modifier.fillMaxSize().padding(4.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(modifier = Modifier.fillMaxSize(0.5f)) {
+            YoutubePlayer(youtubeVideoId = "J7FLdBIuWFM", lifecycleOwner = LocalLifecycleOwner.current)
+            SoundSection()
+        }
+        IntentsSection()
+    }
 }
 
 
 @Composable
 private fun PortraitMode() {
-    //TODO:
+    Column(
+        modifier = Modifier.fillMaxSize().padding(4.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        YoutubePlayer(youtubeVideoId = "J7FLdBIuWFM", lifecycleOwner = LocalLifecycleOwner.current)
+        SoundSection()
+        IntentsSection()
+    }
 }
 
 @Composable
 fun SoundSection() {
     //https://pixabay.com/sound-effects/
-    //TODO:
+    val mediaPlayer = MediaPlayer.create(LocalContext.current, R.raw.chonologyoflove)
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -47,7 +77,7 @@ fun SoundSection() {
     ) {
         Row {
             IconButton(onClick = {
-                //TODO:
+                mediaPlayer.start()
             }) {
                 Icon(
                     imageVector = Icons.Default.PlayCircle,
@@ -57,7 +87,7 @@ fun SoundSection() {
             }
 
             IconButton(onClick = {
-                //TODO:
+                mediaPlayer.pause()
             }) {
                 Icon(
                     imageVector = Icons.Default.PauseCircle,
@@ -75,7 +105,8 @@ fun IntentsSection() {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
             Button(onClick = {
-                //TODO:
+                val dialIntent = Intent(Intent.ACTION_DIAL, "tel:450-436-1580".toUri())
+                context.startActivity(dialIntent)
             }) {
                 Text(text = stringResource(R.string.phone))
             }
@@ -83,7 +114,9 @@ fun IntentsSection() {
 
         item {
             Button(onClick = {
-                //TODO:
+                val smsIntent = Intent(Intent.ACTION_VIEW, "smsto:4504361580".toUri())
+                smsIntent.putExtra("sms_body", "Bonjour de mon application Android")
+                context.startActivity(smsIntent)
             }) {
                 Text(text = stringResource(R.string.sms))
             }
@@ -91,7 +124,10 @@ fun IntentsSection() {
 
         item {
             Button(onClick = {
-                //TODO:
+                val gmmIntentUri = "geo:0,0?q=restaurants".toUri()
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                context.startActivity(mapIntent)
             }) {
                 Text(text = stringResource(R.string.maps))
             }

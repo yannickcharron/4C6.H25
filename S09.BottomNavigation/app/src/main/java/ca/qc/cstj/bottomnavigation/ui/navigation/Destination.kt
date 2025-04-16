@@ -1,5 +1,6 @@
 package ca.qc.cstj.bottomnavigation.ui.navigation
 
+import androidx.compose.ui.util.fastCbrt
 import androidx.navigation.NavBackStackEntry
 import ca.qc.cstj.bottomnavigation.R
 import kotlinx.serialization.Serializable
@@ -30,6 +31,9 @@ sealed interface Destination {
     @Serializable
     data class Map(val lat: Double, val lng: Double) : Destination
 
+    @Serializable
+    data object Login : Destination
+
     fun title() : Int {
         return when(this) {
             Barcode -> R.string.barcode
@@ -40,6 +44,7 @@ sealed interface Destination {
             PlanetList -> R.string.planets
             Profile -> R.string.profile
             is Map -> R.string.maps
+            Login -> R.string.loading
         }
     }
 
@@ -54,6 +59,7 @@ sealed interface Destination {
     fun isBottomBarVisible(): Boolean {
         return when(this) {
             is Map -> false
+            Login -> false
             else -> true
         }
     }
@@ -61,6 +67,7 @@ sealed interface Destination {
     fun isTopBarVisible() : Boolean {
         return when(this) {
             is Map -> false
+            Login -> false
             else -> true
         }
     }
@@ -82,6 +89,7 @@ fun NavBackStackEntry?.fromRoute() : Destination {
                 Destination.Barcode::class.simpleName -> Destination.Barcode
                 Destination.Orientation::class.simpleName -> Destination.Orientation
                 Destination.Map::class.simpleName -> Destination.Map(0.0,0.0)
+                Destination.Login::class.simpleName -> Destination.Login
                 else -> Destination.CurrentWeather
             }
         }
