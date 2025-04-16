@@ -46,7 +46,7 @@ private fun LandscapeMode() {
         horizontalArrangement = Arrangement.Center
     ) {
         Column(modifier = Modifier.fillMaxSize(0.5f)) {
-            YoutubePlayer(youtubeVideoId = "J7FLdBIuWFM", lifecycleOwner = LocalLifecycleOwner.current)
+            YoutubePlayer(youtubeVideoId = "dQw4w9WgXcQ", lifecycleOwner = LocalLifecycleOwner.current)
             SoundSection()
         }
         IntentsSection()
@@ -60,7 +60,7 @@ private fun PortraitMode() {
         modifier = Modifier.fillMaxSize().padding(4.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        YoutubePlayer(youtubeVideoId = "J7FLdBIuWFM", lifecycleOwner = LocalLifecycleOwner.current)
+        YoutubePlayer(youtubeVideoId = "dQw4w9WgXcQ", lifecycleOwner = LocalLifecycleOwner.current)
         SoundSection()
         IntentsSection()
     }
